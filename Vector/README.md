@@ -1,34 +1,34 @@
-# Custom C++ Vector 🚀
+# Custom C++ Vector
 
-Acest proiect este o implementare custom a containerului `std::vector` din C++ Standard Template Library (STL). Sub namespace-ul `sebi::vector<T>`, proiectul are scop pur educațional, fiind construit from scratch pentru a aprofunda concepte avansate de C++ (gestionarea dinamică a memoriei, "Rule of 5", templating și iteratori).
+This project is a custom implementation of the `std::vector` container from the C++ Standard Template Library (STL). Located under the `sebi::vector<T>` namespace, the project serves a strictly educational purpose, being built from scratch to deepen the understanding of advanced C++ concepts (dynamic memory management, the "Rule of 5", templating, and iterators).
 
-## Funcționalități Implementate ✨
+## Implemented Features
 
-Până în acest moment, clasa `sebi::vector<T>` suportă următoarele operații și concepte:
+As of now, the `sebi::vector<T>` class supports the following operations and concepts:
 
-### 1. Concepte de bază și "Rule of 5"
-- **Constructori variați**: 
+### 1. Core Concepts and the "Rule of 5"
+- **Various Constructors**: 
   - Standard (Default).
-  - Alocare pe bază de capacitate (`vector(size_t _capacity)`).
-  - Constructor cu `std::initializer_list` (suport pentru syntaxa `vector<int> v = {1, 2, 3};`).
-- **Copy Constructor & Copy Assignment Operator**: Pentru efectuarea unei copierii complete (deep copy) cap-coadă în siguranță.
-- **Move Constructor & Move Assignment Operator** (`noexcept`): Pentru un transfer de resurse rapid și lipsit de excepții (fără alocări noi) aplicând semantica `std::move`.
-- **Destructor**: Previne *memory leak-urile* dealocând memoria array-ului `delete[] data;`.
+  - Capacity-based allocation (`vector(size_t _capacity)`).
+  - Constructor with `std::initializer_list` (supports syntax like `vector<int> v = {1, 2, 3};`).
+- **Copy Constructor & Copy Assignment Operator**: For performing a safe, full deep copy.
+- **Move Constructor & Move Assignment Operator** (`noexcept`): For fast, exception-free resource transfer without new allocations, applying `std::move` semantics.
+- **Destructor**: Prevents memory leaks by deallocating the underlying array via `delete[] data;`.
 
-### 2. Modificatori de stare
-- `push_back(const T& element)`: Inserare la final. Include logică de realocare automată a memoriei (dublarea capacității) atunci când limita a fost atinsă.
-- `pop_back()`: Ștergere rapidă a ultimului element prin decrementarea mărimii (free logic).
-- `reserve(size_t new_cap)`: Pre-realocare de memorie pentru o eficiență sporită, evitând re-alocările ineficiente repetate.
-- `clear()`: Golește conținutul vectorului setând o mărime vizibilă ca 0, păstrând capacitatea alocată.
+### 2. State Modifiers
+- `push_back(const T& element)`: Insertion at the end. Includes auto-reallocation logic (doubling the capacity) when the limit is reached.
+- `pop_back()`: Fast deletion of the last element by decrementing the size (logical free).
+- `reserve(size_t new_cap)`: Memory pre-allocation for increased efficiency, avoiding repeated inefficient reallocations.
+- `clear()`: Empties the vector's content by setting its visible size to 0 while keeping the allocated capacity.
 
-### 3. Iteratori și "Range-based for loops"
-- Clasa implementează intern tipurile `iterator` (`T*`) și `const_iterator` (`const T*`).
-- Oferă funcțiile standard `begin()` și `end()`, oferind compatibilitate nativă cu loop-urile moderne for-each: `for(const auto& item : v) { ... }`.
+### 3. Iterators and "Range-based for loops"
+- The class defines internal types `iterator` (`T*`) and `const_iterator` (`const T*`).
+- Provides the standard `begin()` and `end()` functions, offering native compatibility with modern range-based for loops: `for(const auto& item : v) { ... }`.
 
-### 4. Interogare Status & Acces Elemente
-- `operator[]`: Acces pozițional extrem de rapid spre memorie (atât read cât și write).
-- `back()`: Funcție cu un layer activ de protecție (aruncă `std::out_of_range`) pentru returnarea ultimului element.
-- `size()`, `capacity()`, `empty()`: Returnează date referitoare la capacitățile de indexare curente.
+### 4. Status Query & Element Access
+- `operator[]`: Extremely fast positional memory access (both read and write).
+- `back()`: Protected function (throws `std::out_of_range`) to return the last element.
+- `size()`, `capacity()`, `empty()`: Return current indexing capacities.
 
-### 5. Operatori Suplimentari
-- `operator+=(const vector<T>&)` și `operator+(const vector<T>&)` implementați pentru adunare membru-cu-membru, ideal în simulările de matematică liniară, cu guard checks pentru siguranța indexării.
+### 5. Additional Operators
+- `operator+=(const vector<T>&)` and `operator+(const vector<T>&)`: Implemented for member-by-member addition, ideal for linear math simulations, with dimension guard checks.
