@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <utility>
 
+namespace sebi
+{
 template <typename T>
 class vector
 {
@@ -15,6 +17,7 @@ class vector
     // constructor default
     vector()
     {
+        std::cout << "constructor default fara parametrii" << std::endl;
         data = nullptr;
         m_size = 0;
         m_capacity = 0;
@@ -46,12 +49,29 @@ class vector
             data = nullptr;
         }
     }
-
     vector(vector<T> &&other) noexcept : data(other.data), m_size(other.m_size), m_capacity(other.m_capacity)
     {
         other.data = nullptr;
         other.m_size = 0;
         other.m_capacity = 0;
+    }
+    // constructor pentru initializari de tipul
+    // vector<int> v ={1, 2, 3};
+    vector(std::initializer_list<T> list) : m_size(list.size()), m_capacity(list.size())
+    {
+        if (m_capacity > 0)
+        {
+            data = new T[m_capacity];
+            size_t i = 0;
+            for (const T &element : list)
+            {
+                data[i++] = element;
+            }
+        }
+        else
+        {
+            data = nullptr;
+        }
     }
     void push_back(const T &element)
     {
@@ -59,16 +79,7 @@ class vector
         {
             std::cout << "index curent: " << m_size << ", capacitate curenta: " << m_capacity << std::endl;
             std::cout << "se face o realocare de momorie" << std::endl;
-            size_t new_cap = m_capacity == 0 ? 1 : m_capacity * 2;
-            T *new_data = new T[new_cap];
-            for (size_t i = 0; i < m_capacity; i++)
-            {
-                new_data[i] = std::move(data[i]);
-            }
-            delete[] data;
-            m_capacity = new_cap;
-
-            data = new_data;
+            reserve(m_capacity == 0 ? 1 : m_capacity * 2);
         }
         data[m_size++] = element;
     }
@@ -124,12 +135,22 @@ class vector
         }
 
         vector<T> result(*this); // Facem o copie a vectorului curent (folosind Copy Constructor-ul tău)
-        for (size_t i = 0; i < m_size; i++)
-        {
-            result.data[i] += other.data[i];
-        }
+        // te foloseste de operatorul += implementat mai sus
+        result += other;
 
         return result;
+    }
+    vector &operator+=(const vector<T> &other)
+    {
+        if (m_size != other.m_size)
+        {
+            throw std::invalid_argument("Vectorii nu au aceeași dimensiune!");
+        }
+        for (size_t i = 0; i < m_size; i++)
+        {
+            data[i] += other.data[i];
+        }
+        return *this;
     }
     void pop_back()
     {
@@ -162,16 +183,69 @@ class vector
     {
         return m_size;
     }
+    size_t capacity() const
+    {
+        return m_capacity;
+    }
+    // acesta este un free logic
+    // nu necesita delete[]
+    void clear()
+    {
+        m_size = 0;
+    }
+    bool empty() const
+    {
+        return m_size == 0;
+    }
+    void reserve(size_t new_cap)
+    {
+        // pentru a nu face vectorul sa fie mai mic
+        // ai vector(50) => sa nu poti sa dai reserve(10)
+        if (new_cap > m_capacity)
+        {
+            T *new_data = new T[new_cap];
+            for (size_t i = 0; i < m_size; i++)
+            {
+                new_data[i] = std::move(data[i]);
+            }
+            delete[] data;
+            data = new_data;
+            m_capacity = new_cap;
+        }
+    }
+
+    // iteratori
+    using iterator = T *;
+    using const_iterator = const T *;
+
+    iterator begin()
+    {
+        return data; // Returnam pointerul la inceputul array-ului
+    }
+    iterator end()
+    {
+        return data + m_size; // Pointer dupa ultimul element valabil (exclusiv)
+    }
+    // varianta constanta
+    // read only
+    const_iterator begin() const
+    {
+        return data;
+    }
+    const_iterator end() const
+    {
+        return data + m_size;
+    }
 
     ~vector()
     {
         delete[] data;
     }
 };
-
+} // namespace sebi
 int main()
 {
-    vector<int> v;
+    sebi::vector<int> v;
     v.push_back(5);
     v.push_back(5);
     v.push_back(5);
@@ -182,14 +256,20 @@ int main()
         std::cout << v[i] << " ";
     }
     std::cout << std::endl;
-    vector<int> test = v;
-    test = test + v;
+    sebi::vector<int> test = v;
+    test += v;
 
     for (size_t i = 0; i < test.size(); i++)
     {
         std::cout << test[i] << " ";
     }
     std::cout << std::endl;
-    std::cout << v[2];
+
+    sebi::vector<std::string> nume = {"john", "maria", "alex"};
+    // folosind iteratori
+    for (auto &element : nume)
+    {
+        std::cout << element << std::endl;
+    }
     return 0;
 }
