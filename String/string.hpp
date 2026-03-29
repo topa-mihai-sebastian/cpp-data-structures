@@ -12,12 +12,12 @@ public:
     // -1 castat la cel mai mare numar natural
     static const size_t npos = -1;
 
-    string() : m_size(0), m_capacity(0), data(nullptr)
+    string() : data(nullptr), m_size(0), m_capacity(0)
     {
     }
     // string s("hi");
 
-    string(const char *text) : m_size(0), m_capacity(0), data(nullptr)
+    string(const char *text) : data(nullptr), m_size(0), m_capacity(0)
     {
         size_t size_needed = strlen(text);
         reserve(size_needed); // Aloca cel putin necesarul
@@ -29,7 +29,7 @@ public:
     //  string s1 = s2;
     // initializezi data cu null pentru functia reserve
     // aceasta verifica daca data este nullptr
-    string(const string &other) : m_size(0), m_capacity(0), data(nullptr)
+    string(const string &other) : data(nullptr), m_size(0), m_capacity(0)
     {
         reserve(other.m_size);
         if (other.data)
@@ -268,7 +268,7 @@ public:
 
     const char *c_str() const
     {
-        return data;
+        return data ? data : "";
     }
 
     bool empty()
