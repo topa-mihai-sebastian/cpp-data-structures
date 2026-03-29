@@ -70,7 +70,9 @@ int main()
         sebi::vector<int> c = a + b;
         std::cout << "a + b  -> ";
         for (auto x : c)
+        {
             std::cout << x << " "; // expected 21 42 63
+        }
         std::cout << "\n";
     }
     catch (const std::exception &e)
@@ -78,6 +80,7 @@ int main()
         std::cout << "Exception: " << e.what() << "\n";
     }
     std::cout << "\n";
-
+    std::string s = "afasfas";
+    s.find('c');
     return 0;
 }
