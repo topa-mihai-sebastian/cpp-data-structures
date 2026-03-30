@@ -86,8 +86,7 @@ void test_sebi_string()
     std::cout << "Dupa clear -> isEmpty? " << (s7.empty() ? "Da" : "Nu") << " (size: " << s7.size() << ")\n";
     std::cout << "============================================\n\n";
 }
-
-int main()
+void test_sebi_vector()
 {
     std::cout << "=== Test 1: Push Back and Auto-Resize ===" << std::endl;
     sebi::vector<int> v1;
@@ -164,7 +163,28 @@ int main()
         std::cout << "Exception: " << e.what() << "\n";
     }
     std::cout << "\n";
+}
 
-    test_sebi_string();
+int main()
+{
+    sebi::string s("TEST TEST");
+    sebi::string s1("AL DOILEA");
+    s.append("1");
+    s.append(s1);
+    std::cout << s << "\n\n";
+    for (auto c : s)
+    {
+        std::cout << c << std::endl;
+    }
+    sebi::string terminal;
+    std::cin >> terminal;
+    std::cout << "jfshajkf\n";
+    std::cout << terminal << std::endl;
+    s.push_back('X');
+    std::cout << terminal << std::endl;
+    s.push_back('X');
+    std::cout << terminal << std::endl;
+    // test_sebi_vector();
+    // test_sebi_string();
     return 0;
 }

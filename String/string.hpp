@@ -11,6 +11,8 @@ class string
 public:
     // -1 castat la cel mai mare numar natural
     static const size_t npos = -1;
+    using iterator = char *;
+    using const_iterator = const char *;
 
     string() : data(nullptr), m_size(0), m_capacity(0)
     {
@@ -214,12 +216,16 @@ public:
             reserve(m_capacity == 0 ? 1 : m_capacity * 2);
         }
         data[m_size++] = c;
+        data[m_size] = '\0';
     }
 
     void pop_back()
     {
-        m_size--;
-        data[m_size] = '\0';
+        if (m_size > 0)
+        {
+            m_size--;
+            data[m_size] = '\0';
+        }
     }
 
     char &front()
@@ -240,6 +246,24 @@ public:
     const char &back() const
     {
         return data[m_size - 1];
+    }
+
+    // iteratori
+    iterator begin()
+    {
+        return data;
+    }
+    iterator end()
+    {
+        return data + m_size;
+    }
+    const_iterator begin() const
+    {
+        return data;
+    }
+    const_iterator end() const
+    {
+        return data + m_size;
     }
 
     void reserve(size_t new_cap)
@@ -266,6 +290,31 @@ public:
         m_capacity = new_cap;
     }
 
+    string &append(const char *other)
+    {
+        size_t other_len = strlen(other);
+        if (m_capacity < m_size + other_len)
+        {
+            reserve(std::max(m_capacity * 2, m_size + other_len));
+        }
+        strcat(data, other);
+        m_size += other_len;
+
+        return *this;
+    }
+
+    string &append(const string &other)
+    {
+        if (m_capacity < m_size + other.m_size)
+        {
+            reserve(std::max(m_capacity * 2, m_size + other.m_size));
+        }
+        strcat(data, other.data);
+        m_size += other.m_size;
+
+        return *this;
+    }
+
     const char *c_str() const
     {
         return data ? data : "";
@@ -279,7 +328,10 @@ public:
     void clear()
     {
         m_size = 0;
-        data[0] = '\0';
+        if (data)
+        {
+            data[0] = '\0';
+        }
     }
 
     size_t size() const
@@ -301,5 +353,30 @@ private:
     char *data;
     size_t m_size;
     size_t m_capacity;
+
+    friend std::ostream &operator<<(std::ostream &os, const string &str)
+    {
+        os << str.c_str();
+        return os;
+    }
+
+    // is = input stream
+    friend std::istream &operator>>(std::istream &is, string &str)
+    {
+        str.clear(); // Golește string-ul înainte să citești
+        char c;
+
+        // Ignoră spațiile albe (whitespace, newlines, tabs) de dinainte
+        // (comportament similar cu std::string si std::cin)
+        is >> std::ws;
+
+        // Citim caracter cu caracter până la următorul spațiu vizibil
+        while (is.get(c) && !std::isspace(c))
+        {
+            str.push_back(c);
+        }
+
+        return is;
+    }
 };
 } // namespace sebi
